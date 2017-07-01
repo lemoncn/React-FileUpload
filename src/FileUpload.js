@@ -476,15 +476,15 @@ const FileUpload = React.createClass({
             resp.json = JSON ? JSON.parse(resp.responseText) : eval(`(${resp.responseText})`)
         } catch (e) {
             /*如果是包含了<pre>*/
-            if (e.message && e.message.indexOf('Unexpected token') >= 0) {
+            // if (e.message && e.message.indexOf('Unexpected token') >= 0) {
                 /*包含返回的json*/
                 if (resp.responseText.indexOf('{') >= 0) {
-                    const msg = resp.responseText.substring(resp.responseText.indexOf('{'), resp.responseText.lastIndexOf('}') + 1)
-                    return JSON ? JSON.parse(msg) : eval(`(${msg})`)
+                    var msg = resp.responseText.replace(/<\/?pre>/gi, '');
+                    return dataType == 'json' ? window.JSON ? JSON.parse(msg) : eval('(' + msg + ')') : msg;
                 }
-                return {type: 'FINISHERROR', message: e.message}
-            }
-            throw e
+                return { type: 'FINISHERROR', message: e.message };
+            // }
+            throw e;
         }
         return dataType == 'json' ? resp.json : resp.responseText
     },
