@@ -207,6 +207,15 @@ const FileUpload = React.createClass({
     /*现代浏览器input change事件。File API保存文件*/
     /*触发chooseFile*/
     commonChange(e) {
+        //	解决部分浏览器 触发3次的问题
+        if(window['rcuploadHolder']){
+            return;
+        }
+        window['rcuploadHolder'] = true;
+        setTimeout(function() {
+            window['rcuploadHolder'] = false;
+        }, 500);
+
         let files
         e.dataTransfer ? files = e.dataTransfer.files :
           e.target ? files = e.target.files : ''
