@@ -481,7 +481,9 @@ const FileUpload = React.createClass({
         const content = frame.contentWindow ? frame.contentWindow.document.body : frame.contentDocument.document.body
         if(!content) throw new Error('Your browser does not support async upload')
         try {
-            resp.responseText = content.innerHTML || 'null innerHTML'
+            resp.responseText = content.innerHTML || 'null innerHTML';
+            //	如果有pre，则去掉
+            resp.responseText = resp.responseText.replace(/<\/?pre>/gi, '');
             resp.json = JSON ? JSON.parse(resp.responseText) : eval(`(${resp.responseText})`)
         } catch (e) {
             /*如果是包含了<pre>*/
